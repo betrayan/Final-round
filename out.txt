@@ -1,0 +1,36 @@
+[?25l[90m│[39m
+[36m◆[39m  Use rolldown-vite (Experimental)?:
+[36m│[39m
+[36m└[39m
+[999D[4A[1B[J[32m◇[39m  Use rolldown-vite (Experimental)?:
+[90m│[39m  [2mNo[22m
+[?25h[?25l[90m│[39m
+[36m◆[39m  Install with npm and start now?
+[36m│[39m  [32m●[39m Yes [2m/[22m [2m○[22m [2mNo[22m
+[36m└[39m
+[999D[4A[1B[J[32m◇[39m  Install with npm and start now?
+[90m│[39m  [2mYes[22m
+[?25h[90m│[39m
+[32m◇[39m  Scaffolding project in D:\New folder\project...
+[90m│[39m
+[32m◇[39m  Installing dependencies with npm...
+
+added 157 packages, and audited 158 packages in 20s
+
+33 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+[90m│[39m
+[32m◇[39m  Starting dev server...
+
+> project@0.0.0 dev
+> vite
+
+
+  [32m[1mVITE[22m v7.3.1[39m  [2mready in [0m[1m2716[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m5173[22m/[39m
+[2m  [32m➜[39m  [1mNetwork[22m[2m: use [22m[1m--host[22m[2m to expose[22m
+[2m[32m  ➜[39m[22m[2m  press [22m[1mh + enter[22m[2m to show help[22m
+Terminate batch job (Y/N)? 

@@ -1,0 +1,19 @@
+
+> project@0.0.0 build
+> vite build
+
+[36mvite v7.3.1 [32mbuilding client environment for production...[36m[39m
+transforming...
+[32m✓[39m 3 modules transformed.
+[31m✗[39m Build failed in 29.68s
+[31merror during build:
+[31m[vite:css] Failed to load PostCSS config (searchPath: D:/New folder/project): [Error] It looks like you're trying to use `tailwindcss` directly as a PostCSS plugin. The PostCSS plugin has moved to a separate package, so to continue using Tailwind CSS with PostCSS you'll need to install `@tailwindcss/postcss` and update your PostCSS configuration.
+Error: It looks like you're trying to use `tailwindcss` directly as a PostCSS plugin. The PostCSS plugin has moved to a separate package, so to continue using Tailwind CSS with PostCSS you'll need to install `@tailwindcss/postcss` and update your PostCSS configuration.
+    at Ha (file:///D:/New%20folder/project/node_modules/tailwindcss/dist/chunk-CT46QCH7.mjs:38:1643)
+    at file:///D:/New%20folder/project/postcss.config.js?t=1769671709972:6:9
+    at ModuleJob.run (node:internal/modules/esm/module_job:377:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:671:26)
+    at async req$3 (file:///D:/New%20folder/project/node_modules/vite/dist/node/chunks/config.js:7579:12)
+    at async Object.search (file:///D:/New%20folder/project/node_modules/vite/dist/node/chunks/config.js:7396:24)[31m
+file: [36mD:/New folder/project/src/index.css[31m
+[39m

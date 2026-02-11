@@ -1,0 +1,25 @@
+
+> project@0.0.0 build
+> vite build
+
+[36mvite v7.3.1 [32mbuilding client environment for production...[36m[39m
+transforming...
+[32m✓[39m 3 modules transformed.
+[31m✗[39m Build failed in 106ms
+[31merror during build:
+[31m[vite:css] Failed to load PostCSS config (searchPath: D:/New folder/project): [Error] Loading PostCSS Plugin failed: Cannot find module 'tailwindcss'
+Require stack:
+- D:\New folder\project\postcss.config.js
+
+(@D:\New folder\project\postcss.config.js)
+Error: Loading PostCSS Plugin failed: Cannot find module 'tailwindcss'
+Require stack:
+- D:\New folder\project\postcss.config.js
+
+(@D:\New folder\project\postcss.config.js)
+    at load (file:///D:/New%20folder/project/node_modules/vite/dist/node/chunks/config.js:7660:10)
+    at async Promise.all (index 0)
+    at async plugins (file:///D:/New%20folder/project/node_modules/vite/dist/node/chunks/config.js:7682:11)
+    at async processResult (file:///D:/New%20folder/project/node_modules/vite/dist/node/chunks/config.js:7721:13)[31m
+file: [36mD:/New folder/project/src/index.css[31m
+[39m
