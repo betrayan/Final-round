@@ -89,7 +89,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                             <BarChart3 size={14} className="text-emerald-400" />
                             <p className="text-[11px] font-bold text-emerald-400 uppercase tracking-wider">Analytics</p>
                         </div>
-                        <NavItem to="/reports" icon={BarChart3} label="Reports & Dashboard" />
+                        <NavItem to="/reports" icon={BarChart3} label="Dashboard" />
                     </div>
 
                     {/* Resume Analyzer - Standalone */}
