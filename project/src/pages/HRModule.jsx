@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { User, Activity, Clock, Play, Pause, RotateCcw, TrendingUp, AlertCircle } from 'lucide-react';
+import { User, Activity, Clock, Play, Pause, RotateCcw, TrendingUp, AlertCircle, CheckCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import VoiceInterface from '../components/VoiceInterface';
 import { useTimer } from '../hooks/useTimer';
+import { useAssessment } from '../context/AssessmentContext';
 
 const HRModule = () => {
+    const { checkAssessmentAccess, completeStep } = useAssessment();
     const [difficulty, setDifficulty] = useState('medium');
     const [confidence, setConfidence] = useState(85);
     const [stressLevel, setStressLevel] = useState(45);
@@ -23,6 +25,10 @@ const HRModule = () => {
         alert('Session time completed!');
     });
 
+    useEffect(() => {
+        checkAssessmentAccess('/hr-module');
+    }, []);
+
     // Simulate real-time sentiment changes
     useEffect(() => {
         if (sessionStarted && isRunning) {
@@ -34,6 +40,11 @@ const HRModule = () => {
             return () => clearInterval(interval);
         }
     }, [sessionStarted, isRunning]);
+
+    const handleFinish = () => {
+        const suggestions = ["Maintain eye contact", "Structure answers with STAR method"];
+        completeStep('hr', suggestions);
+    };
 
     const handleStartSession = () => {
         setSessionStarted(true);
@@ -118,6 +129,13 @@ const HRModule = () => {
                                     title="Reset Session"
                                 >
                                     <RotateCcw size={16} className="text-white" />
+                                </button>
+                                <button
+                                    onClick={handleFinish}
+                                    className="p-1.5 bg-emerald-600 hover:bg-emerald-500 rounded-lg transition-colors flex items-center gap-2"
+                                    title="Finish Interview"
+                                >
+                                    <CheckCircle size={16} className="text-white" />
                                 </button>
                             </>
                         )}

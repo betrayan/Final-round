@@ -1,8 +1,20 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useAssessment } from '../context/AssessmentContext';
 import GDLobbyComponent from '../components/GDLobby';
 import { MessageSquare } from 'lucide-react';
 
 const GDArena = () => {
+    const { checkAssessmentAccess, completeStep } = useAssessment();
+
+    useEffect(() => {
+        checkAssessmentAccess('/gd-arena');
+    }, []);
+
+    const handleEnd = () => {
+        const suggestions = ["Speak more confidently", "Interject less frequently"];
+        completeStep('gd', suggestions);
+    };
+
     return (
         <div className="h-full flex flex-col gap-4 p-4 overflow-hidden">
             <header className="shrink-0 flex items-center justify-between">
@@ -13,6 +25,12 @@ const GDArena = () => {
                         Topic: <strong>"Impact of AI on Creative Jobs"</strong>
                     </div>
                 </div>
+                <button
+                    onClick={handleEnd}
+                    className="px-4 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/50 rounded-lg text-sm font-bold transition-all"
+                >
+                    End Discussion
+                </button>
             </header>
 
             <div className="flex-grow grid grid-cols-1 lg:grid-cols-3 gap-4 min-h-0">

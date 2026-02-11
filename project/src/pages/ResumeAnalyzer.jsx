@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { useGlobal } from '../context/GlobalContext';
+import { useAssessment } from '../context/AssessmentContext';
 import { UploadCloud, FileText, CheckCircle, PieChart, BarChart2, AlertCircle, ArrowRight, Download } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { analyzeResume } from '../utils/resumeAnalyzer';
 
 const ResumeAnalyzer = () => {
     const { resumeData, uploadResume } = useGlobal();
+    const { addResumeSuggestions } = useAssessment();
     const [isReanalyzing, setIsReanalyzing] = useState(false);
     const [file, setFile] = useState(null);
 
@@ -18,6 +20,13 @@ const ResumeAnalyzer = () => {
             setTimeout(async () => {
                 const results = await analyzeResume(uploadedFile);
                 uploadResume(results);
+
+                // Add suggestions to global report
+                if (results.missingSkills && results.missingSkills.length > 0) {
+                    const suggestions = results.missingSkills.slice(0, 3).map(skill => `Resume Gap: Missing keyword '${skill}'`);
+                    addResumeSuggestions(suggestions);
+                }
+
                 setIsReanalyzing(false);
                 setFile(null);
             }, 2000);

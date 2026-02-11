@@ -1,8 +1,11 @@
 import React from 'react';
+import { useAssessment } from '../context/AssessmentContext';
 import ScoreChart from '../components/ScoreChart';
 import { Download, Share2, TrendingUp, AlertTriangle, BookOpen } from 'lucide-react';
 
 const Reports = () => {
+    const { resumeSuggestions } = useAssessment();
+
     return (
         <div className="h-[calc(100vh-4rem)] overflow-y-auto scrollbar-thin">
             <header className="flex justify-between items-center mb-4">
@@ -56,7 +59,28 @@ const Reports = () => {
                     </div>
                 </div>
             </div>
+
+            {/* Resume & Assessment Suggestions */}
+            <div className="lg:col-span-2 p-4 rounded-2xl bg-indigo-900/10 border border-indigo-500/20">
+                <div className="flex items-center gap-2 mb-3">
+                    <BookOpen className="text-indigo-400" size={16} />
+                    <h3 className="text-sm font-bold text-white">Assessment & Resume Suggestions</h3>
+                </div>
+                {resumeSuggestions.length > 0 ? (
+                    <ul className="space-y-2">
+                        {resumeSuggestions.map((suggestion, index) => (
+                            <li key={index} className="flex items-start gap-2 text-xs text-slate-300">
+                                <span className="text-indigo-400 mt-0.5">•</span>
+                                {suggestion}
+                            </li>
+                        ))}
+                    </ul>
+                ) : (
+                    <p className="text-xs text-slate-500">Complete assessments to get personalized suggestions.</p>
+                )}
+            </div>
         </div>
+
     );
 };
 

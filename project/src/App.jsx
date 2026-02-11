@@ -18,6 +18,9 @@ import { Menu, LogOut, Settings, User, ChevronDown } from 'lucide-react';
 import { GlobalProvider, useGlobal } from './context/GlobalContext';
 import { ToastProvider } from './context/ToastContext';
 import { useToast } from './hooks/useToast';
+import { AssessmentProvider, useAssessment } from './context/AssessmentContext';
+import RoleSelectionModal from './components/modals/RoleSelectionModal';
+import CongratsModal from './components/modals/CongratsModal';
 
 // Protected Route Wrapper
 const ProtectedRoute = ({ children }) => {
@@ -34,7 +37,9 @@ function MainLayout({ children }) {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+
   const userMenuRef = useRef(null);
+  const { setIsRoleModalOpen } = useAssessment();
 
   // Close user menu when clicking outside
   useEffect(() => {
@@ -102,6 +107,13 @@ function MainLayout({ children }) {
 
             {/* Right: User Info */}
             <div className="flex items-center gap-3">
+              <button
+                onClick={() => setIsRoleModalOpen(true)}
+                className="hidden sm:flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white text-sm font-bold rounded-xl transition-all shadow-lg shadow-emerald-500/20 active:scale-[0.98]"
+              >
+                Start Assessment
+              </button>
+
               <div ref={userMenuRef} className="relative">
                 <button
                   onClick={() => setUserMenuOpen(!userMenuOpen)}
@@ -156,7 +168,9 @@ function AppContent() {
   const { toasts, removeToast } = useToast();
 
   return (
-    <>
+    <AssessmentProvider>
+      <RoleSelectionModal />
+      <CongratsModal />
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
@@ -222,7 +236,7 @@ function AppContent() {
 
       {/* Toast Notifications */}
       <Toast toasts={toasts} removeToast={removeToast} />
-    </>
+    </AssessmentProvider>
   );
 }
 

@@ -1,19 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useAssessment } from '../context/AssessmentContext';
 import { Code, Play, CheckCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import VoiceInterface from '../components/VoiceInterface';
 import Stepper from '../components/Stepper';
 
 const TechnicalAssessment = () => {
-    const navigate = useNavigate();
+    const { checkAssessmentAccess, completeStep } = useAssessment();
     const [step, setStep] = useState(1);
     const totalSteps = 4;
+
+    useEffect(() => {
+        checkAssessmentAccess('/technical');
+    }, []);
 
     const handleNext = () => {
         if (step < totalSteps) {
             setStep(prev => prev + 1);
         } else {
-            navigate('/reports');
+            const suggestions = ["Deepen knowledge of React hooks", "Practice performance optimization"];
+            completeStep('technical', suggestions);
         }
     };
 

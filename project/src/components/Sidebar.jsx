@@ -30,7 +30,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                 ></motion.div>
             )}
 
-            <aside className={`fixed lg:sticky top-0 h-screen w-[260px] sm:w-[280px] md:w-[300px] glass-panel backdrop-blur-3xl border-r border-white/10 z-40 transition-all duration-300 ease-out flex flex-col shadow-2xl ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
+            <aside className={`fixed lg:sticky top-0 h-screen w-[220px] sm:w-[240px] md:w-[260px] glass-panel backdrop-blur-3xl border-r border-white/10 z-40 transition-all duration-300 ease-out flex flex-col shadow-2xl ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
                 {/* Animated Background Orbs */}
                 <div className="absolute inset-0 pointer-events-none overflow-hidden">
                     <motion.div
@@ -92,39 +92,31 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                         <NavItem to="/reports" icon={BarChart3} label="Dashboard" />
                     </div>
 
-                    {/* Resume Analyzer - Standalone */}
-                    <div className="pt-3 border-t border-white/10">
-                        <div className="px-3 mb-3 flex items-center gap-2">
-                            <FileText size={14} className="text-cyan-400" />
-                            <p className="text-[11px] font-bold text-cyan-400 uppercase tracking-wider">Resume Analysis</p>
-                        </div>
-                        <NavItem to="/resume-analyzer" icon={FileText} label="Resume Analyzer" />
-                    </div>
 
-                    {/* Assessment Module - Technical + Aptitude */}
+
+                    {/* Assessment Flow */}
                     <div className="pt-3 border-t border-white/10">
                         <div className="px-3 mb-3 flex items-center gap-2">
                             <Code size={14} className="text-violet-400" />
-                            <p className="text-[11px] font-bold text-violet-400 uppercase tracking-wider">Assessment Module</p>
+                            <p className="text-[11px] font-bold text-violet-400 uppercase tracking-wider">Assessment Flow</p>
                         </div>
                         <div className="space-y-1.5">
-                            <NavItem to="/technical" icon={Code} label="Technical Test" />
                             <NavItem to="/aptitude" icon={BrainCircuit} label="Aptitude Test" />
-                        </div>
-                    </div>
-
-                    {/* Interview Preparation - HR + GD */}
-                    <div className="pt-3 border-t border-white/10">
-                        <div className="px-3 mb-3 flex items-center gap-2">
-                            <Users size={14} className="text-fuchsia-400" />
-                            <p className="text-[11px] font-bold text-fuchsia-400 uppercase tracking-wider">Interview Prep</p>
-                        </div>
-                        <div className="space-y-1.5">
-                            <NavItem to="/hr-module" icon={Users} label="HR Interview" />
+                            <NavItem to="/technical" icon={Code} label="Technical Test" />
                             <NavItem to="/gd-arena" icon={MessageSquare} label="Group Discussion" />
+                            <NavItem to="/hr-module" icon={Users} label="Face to Face (HR)" />
                         </div>
                     </div>
                 </nav>
+
+                {/* Resume Analyzer - Bottom Fixed */}
+                <div className="p-3 border-t border-white/10 z-10">
+                    <div className="px-3 mb-2 flex items-center gap-2">
+                        <FileText size={14} className="text-cyan-400" />
+                        <p className="text-[11px] font-bold text-cyan-400 uppercase tracking-wider">Resume Analysis</p>
+                    </div>
+                    <NavItem to="/resume-analyzer" icon={FileText} label="Resume Analyzer" />
+                </div>
 
                 {/* Bottom Section - REMOVED */}
                 {/* User menu moved to top right header */}
