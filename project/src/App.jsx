@@ -39,7 +39,7 @@ function MainLayout({ children }) {
   const navigate = useNavigate();
 
   const userMenuRef = useRef(null);
-  const { setIsRoleModalOpen } = useAssessment();
+  const { setIsRoleModalOpen, jobRole, cancelAssessment } = useAssessment();
 
   // Close user menu when clicking outside
   useEffect(() => {
@@ -107,12 +107,27 @@ function MainLayout({ children }) {
 
             {/* Right: User Info */}
             <div className="flex items-center gap-3">
-              <button
-                onClick={() => setIsRoleModalOpen(true)}
-                className="hidden sm:flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white text-sm font-bold rounded-xl transition-all shadow-lg shadow-emerald-500/20 active:scale-[0.98]"
-              >
-                Start Assessment
-              </button>
+              {!jobRole ? (
+                <button
+                  onClick={() => setIsRoleModalOpen(true)}
+                  className="hidden sm:flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white text-sm font-bold rounded-xl transition-all shadow-lg shadow-emerald-500/20 active:scale-[0.98]"
+                >
+                  Start Assessment
+                </button>
+              ) : (
+                <div className="flex items-center gap-3">
+                  <div className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-slate-800/50 rounded-lg border border-slate-700/50 text-xs font-mono text-emerald-400 animate-in fade-in slide-in-from-top-2">
+                    <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+                    In Progress
+                  </div>
+                  <button
+                    onClick={cancelAssessment}
+                    className="hidden sm:flex items-center gap-2 px-4 py-2 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 hover:border-rose-500/30 text-sm font-bold rounded-xl transition-all active:scale-[0.98]"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              )}
 
               <div ref={userMenuRef} className="relative">
                 <button

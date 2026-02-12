@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Play, Check, ArrowRight, Target, Layers } from 'lucide-react';
+import { Play, Check, ArrowRight, Target, Layers, X } from 'lucide-react';
 import { useAssessment } from '../../context/AssessmentContext';
 
 const RoleSelectionModal = () => {
@@ -33,6 +33,14 @@ const RoleSelectionModal = () => {
                         className="bg-slate-900 border border-slate-700/80 rounded-2xl p-6 w-full max-w-lg shadow-2xl relative overflow-hidden"
                     >
                         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-500 via-cyan-500 to-emerald-500 animate-gradient-x"></div>
+
+                        {/* Close Button */}
+                        <button
+                            onClick={() => setIsRoleModalOpen(false)}
+                            className="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors p-1 hover:bg-slate-800 rounded-full"
+                        >
+                            <X size={20} />
+                        </button>
 
                         <h2 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
                             <span className="bg-emerald-500/20 p-2 rounded-lg text-emerald-400">
@@ -89,8 +97,8 @@ const RoleSelectionModal = () => {
                                         type="button"
                                         onClick={() => setMode('sequence')}
                                         className={`p-3 rounded-xl border flex flex-col gap-2 transition-all text-left ${mode === 'sequence'
-                                                ? 'bg-emerald-500/10 border-emerald-500/50 text-emerald-400 ring-1 ring-emerald-500/50'
-                                                : 'bg-slate-800/30 border-slate-700 text-slate-400 hover:bg-slate-800 hover:border-slate-600'
+                                            ? 'bg-emerald-500/10 border-emerald-500/50 text-emerald-400 ring-1 ring-emerald-500/50'
+                                            : 'bg-slate-800/30 border-slate-700 text-slate-400 hover:bg-slate-800 hover:border-slate-600'
                                             }`}
                                     >
                                         <div className="flex items-center gap-2 font-bold text-sm">
@@ -105,8 +113,8 @@ const RoleSelectionModal = () => {
                                         type="button"
                                         onClick={() => setMode('standalone')}
                                         className={`p-3 rounded-xl border flex flex-col gap-2 transition-all text-left ${mode === 'standalone'
-                                                ? 'bg-emerald-500/10 border-emerald-500/50 text-emerald-400 ring-1 ring-emerald-500/50'
-                                                : 'bg-slate-800/30 border-slate-700 text-slate-400 hover:bg-slate-800 hover:border-slate-600'
+                                            ? 'bg-emerald-500/10 border-emerald-500/50 text-emerald-400 ring-1 ring-emerald-500/50'
+                                            : 'bg-slate-800/30 border-slate-700 text-slate-400 hover:bg-slate-800 hover:border-slate-600'
                                             }`}
                                     >
                                         <div className="flex items-center gap-2 font-bold text-sm">

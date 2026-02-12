@@ -14,8 +14,11 @@ import {
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-const Sidebar = ({ isOpen, setIsOpen }) => {
+import { useAssessment } from '../context/AssessmentContext';
 
+const Sidebar = ({ isOpen, setIsOpen }) => {
+    const { jobRole, completedSteps } = useAssessment();
+    const isAssessmentActive = !!jobRole;
 
     return (
         <>
@@ -83,40 +86,43 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
 
                 {/* Navigation */}
                 <nav className="flex-grow px-2 sm:px-3 py-4 sm:py-5 space-y-5 sm:space-y-6 overflow-y-auto scrollbar-thin relative z-10">
-                    {/* Analytics Section */}
-                    <div>
-                        <div className="px-3 mb-3 flex items-center gap-2">
-                            <BarChart3 size={14} className="text-emerald-400" />
-                            <p className="text-[11px] font-bold text-emerald-400 uppercase tracking-wider">Analytics</p>
+                    {/* Analytics Section - Only show when NOT in active assessment */}
+                    {!isAssessmentActive && (
+                        <div>
+                            <div className="px-3 mb-3 flex items-center gap-2">
+                                <BarChart3 size={14} className="text-emerald-400" />
+                                <p className="text-[11px] font-bold text-emerald-400 uppercase tracking-wider">Analytics</p>
+                            </div>
+                            <NavItem to="/reports" icon={BarChart3} label="Dashboard" />
                         </div>
-                        <NavItem to="/reports" icon={BarChart3} label="Dashboard" />
-                    </div>
+                    )}
 
 
-
-                    {/* Assessment Flow */}
-                    <div className="pt-3 border-t border-white/10">
+                    {/* Assessment Flow - Always Visible */}
+                    <div className={`${!isAssessmentActive ? 'pt-3 border-t border-white/10' : ''}`}>
                         <div className="px-3 mb-3 flex items-center gap-2">
                             <Code size={14} className="text-violet-400" />
                             <p className="text-[11px] font-bold text-violet-400 uppercase tracking-wider">Assessment Flow</p>
                         </div>
                         <div className="space-y-1.5">
-                            <NavItem to="/aptitude" icon={BrainCircuit} label="Aptitude Test" />
-                            <NavItem to="/technical" icon={Code} label="Technical Test" />
-                            <NavItem to="/gd-arena" icon={MessageSquare} label="Group Discussion" />
-                            <NavItem to="/hr-module" icon={Users} label="Face to Face (HR)" />
+                            <NavItem to="/aptitude" icon={BrainCircuit} label="Aptitude Test" isCompleted={completedSteps.includes('aptitude')} />
+                            <NavItem to="/technical" icon={Code} label="Technical Test" isCompleted={completedSteps.includes('technical')} />
+                            <NavItem to="/gd-arena" icon={MessageSquare} label="Group Discussion" isCompleted={completedSteps.includes('gd')} />
+                            <NavItem to="/hr-module" icon={Users} label="Face to Face (HR)" isCompleted={completedSteps.includes('hr')} />
                         </div>
                     </div>
                 </nav>
 
-                {/* Resume Analyzer - Bottom Fixed */}
-                <div className="p-3 border-t border-white/10 z-10">
-                    <div className="px-3 mb-2 flex items-center gap-2">
-                        <FileText size={14} className="text-cyan-400" />
-                        <p className="text-[11px] font-bold text-cyan-400 uppercase tracking-wider">Resume Analysis</p>
+                {/* Resume Analyzer - Hide during assessment */}
+                {!isAssessmentActive && (
+                    <div className="p-3 border-t border-white/10 z-10">
+                        <div className="px-3 mb-2 flex items-center gap-2">
+                            <FileText size={14} className="text-cyan-400" />
+                            <p className="text-[11px] font-bold text-cyan-400 uppercase tracking-wider">Resume Analysis</p>
+                        </div>
+                        <NavItem to="/resume-analyzer" icon={FileText} label="Resume Analyzer" />
                     </div>
-                    <NavItem to="/resume-analyzer" icon={FileText} label="Resume Analyzer" />
-                </div>
+                )}
 
                 {/* Bottom Section - REMOVED */}
                 {/* User menu moved to top right header */}

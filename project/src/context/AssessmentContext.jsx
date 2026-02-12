@@ -121,13 +121,16 @@ export const AssessmentProvider = ({ children }) => {
         const step = steps.find(s => s.path === path);
         if (!step) return true;
 
-        if (!jobRole) {
-            setIsRoleModalOpen(true);
-            return false;
+        const currentRole = jobRole || localStorage.getItem('nexus_job_role');
+        const currentMode = assessmentMode || localStorage.getItem('nexus_assessment_mode');
+
+        // If no assessment started, allow browsing without restrictions
+        if (!currentRole) {
+            return true;
         }
 
         // If standalone, allow access to any assessment page
-        if (assessmentMode === 'standalone') {
+        if (currentMode === 'standalone') {
             return true;
         }
 

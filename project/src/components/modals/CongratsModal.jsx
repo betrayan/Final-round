@@ -1,10 +1,32 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CheckCircle, ArrowRight } from 'lucide-react';
+import { CheckCircle, ArrowRight, Timer, Zap } from 'lucide-react';
 import { useAssessment } from '../../context/AssessmentContext';
 
 const CongratsModal = () => {
     const { isCongratsModalOpen, moveToNextRound, assessmentMode, setIsCongratsModalOpen } = useAssessment();
+    const [timeLeft, setTimeLeft] = useState(30);
+
+    useEffect(() => {
+        if (isCongratsModalOpen) {
+            setTimeLeft(30);
+        }
+    }, [isCongratsModalOpen]);
+
+    useEffect(() => {
+        if (!isCongratsModalOpen || assessmentMode !== 'sequence') return;
+
+        if (timeLeft === 0) {
+            moveToNextRound();
+            return;
+        }
+
+        const timerId = setInterval(() => {
+            setTimeLeft(prev => prev - 1);
+        }, 1000);
+
+        return () => clearInterval(timerId);
+    }, [isCongratsModalOpen, timeLeft, assessmentMode, moveToNextRound]);
 
     if (!isCongratsModalOpen) return null;
 
@@ -36,14 +58,34 @@ const CongratsModal = () => {
                         </div>
 
                         <h2 className="text-2xl font-bold text-white mb-2">
-                            Congratulations!
+                            Great Job!
                         </h2>
 
-                        <p className="text-slate-400 text-sm mb-6 px-4">
+                        <p className="text-slate-400 text-sm mb-6 px-4 leading-relaxed">
                             {assessmentMode === 'sequence'
-                                ? "You have successfully completed this round. You are selected! Shall we move to the next round?"
-                                : "You have successfully completed this practice round. Great job!"}
+                                ? "You smashed this round! Take a deep breath. The next challenge begins in..."
+                                : "You have successfully completed this practice round. Outstanding performance!"}
                         </p>
+
+                        {assessmentMode === 'sequence' && (
+                            <div className="mb-6 flex justify-center">
+                                <div className="flex items-center gap-3 px-4 py-2 bg-slate-800 rounded-xl border border-slate-700">
+                                    <Timer size={18} className="text-emerald-400 animate-pulse" />
+                                    <span className="text-2xl font-mono font-bold text-white">
+                                        00:{timeLeft < 10 ? `0${timeLeft}` : timeLeft}
+                                    </span>
+                                </div>
+                            </div>
+                        )}
+
+                        {assessmentMode === 'sequence' && (
+                            <div className="bg-emerald-500/5 border border-emerald-500/10 rounded-lg p-3 mb-6 text-xs text-emerald-400/80">
+                                <strong className="block text-emerald-400 mb-1 flex items-center justify-center gap-1">
+                                    <Zap size={12} /> Next Round Note:
+                                </strong>
+                                Stay focused. Speed and accuracy are key.
+                            </div>
+                        )}
 
                         <div className="flex flex-col gap-3">
                             <button
@@ -51,7 +93,7 @@ const CongratsModal = () => {
                                 className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 text-sm active:scale-[0.98]"
                             >
                                 {assessmentMode === 'sequence' ? (
-                                    <>Yes, Start Next Round <ArrowRight size={18} /></>
+                                    <>Skip Timer & Start Next <ArrowRight size={18} /></>
                                 ) : (
                                     "Close & Stay Here"
                                 )}
