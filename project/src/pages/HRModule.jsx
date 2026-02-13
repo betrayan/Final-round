@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { User, Activity, Clock, Play, Pause, RotateCcw, TrendingUp, AlertCircle, CheckCircle } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { User, Activity, Clock, Play, Pause, RotateCcw, TrendingUp, AlertCircle, CheckCircle, Brain, HeartPulse, MoreHorizontal } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import VoiceInterface from '../components/VoiceInterface';
 import { useTimer } from '../hooks/useTimer';
 import { useAssessment } from '../context/AssessmentContext';
@@ -33,9 +33,9 @@ const HRModule = () => {
     useEffect(() => {
         if (sessionStarted && isRunning) {
             const interval = setInterval(() => {
-                setConfidence(prev => Math.min(100, prev + (Math.random() > 0.5 ? 1 : -1)));
-                setStressLevel(prev => Math.max(0, Math.min(100, prev + (Math.random() > 0.6 ? 1 : -1))));
-            }, 5000);
+                setConfidence(prev => Math.min(100, Math.max(0, prev + (Math.random() > 0.5 ? 2 : -2))));
+                setStressLevel(prev => Math.min(100, Math.max(0, prev + (Math.random() > 0.6 ? 2 : -2))));
+            }, 3000);
 
             return () => clearInterval(interval);
         }
@@ -77,21 +77,37 @@ const HRModule = () => {
     const stressInfo = getStressLevel(stressLevel);
 
     return (
-        <div className="h-full flex flex-col gap-4 p-4 overflow-hidden">
-            <header className="shrink-0 flex flex-col md:flex-row justify-between gap-4">
-                <div>
-                    <h2 className="text-3xl font-bold text-white mb-2">Behavioral Interview</h2>
-                    <p className="text-slate-400">STAR Method Analysis Enabled</p>
+        <div className="h-full flex flex-col gap-2 p-2 overflow-hidden bg-slate-950 relative">
+            {/* Ambient Background */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                <div className="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] bg-blue-600/10 blur-[120px] rounded-full mix-blend-screen" />
+                <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-emerald-600/10 blur-[120px] rounded-full mix-blend-screen" />
+            </div>
+
+            <header className="shrink-0 flex items-center justify-between bg-slate-900/40 backdrop-blur-xl border border-white/5 p-2 px-3 rounded-xl relative z-10 h-14">
+                <div className="flex items-center gap-3">
+                    <div className="relative">
+                        <div className="w-10 h-10 rounded-full overflow-hidden border border-white/10">
+                            <img src="https://img.freepik.com/free-photo/portrait-young-businesswoman-holding-eyeglasses-hand-against-gray-backdrop_23-2148029483.jpg" className="w-full h-full object-cover opacity-90" alt="HR" />
+                        </div>
+                        <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 border-2 border-slate-900 rounded-full"></span>
+                    </div>
+                    <div>
+                        <h2 className="text-sm font-bold text-white leading-none">Sarah Jenkins</h2>
+                        <div className="flex items-center gap-2 text-slate-400 text-[10px] mt-0.5">
+                            HR Lead • TechFlow
+                        </div>
+                    </div>
                 </div>
 
-                <div className="flex items-center gap-4">
-                    {/* Difficulty Selector */}
-                    <div className="flex bg-slate-900/80 p-1 rounded-xl border border-white/5">
+                <div className="flex items-center gap-3">
+                    {/* Difficulty */}
+                    <div className="hidden md:flex bg-slate-800/80 p-0.5 rounded-lg border border-white/5">
                         {['easy', 'medium', 'hard'].map((level) => (
                             <button
                                 key={level}
                                 onClick={() => setDifficulty(level)}
-                                className={`px-4 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-300 ${difficulty === level
+                                className={`px-2 py-1 rounded-md text-[9px] font-bold uppercase tracking-wider transition-all ${difficulty === level
                                     ? 'bg-white text-slate-900 shadow-sm'
                                     : 'text-slate-500 hover:text-slate-300'
                                     }`}
@@ -101,41 +117,30 @@ const HRModule = () => {
                         ))}
                     </div>
 
-                    {/* Timer */}
-                    <div className="flex items-center gap-3 bg-white/5 px-4 py-2 rounded-xl border border-white/10">
-                        <Clock className={`${isRunning ? 'text-indigo-400 animate-pulse' : 'text-slate-400'}`} size={20} />
-                        <span className="text-xl font-mono text-white min-w-[80px]">{formattedTime}</span>
+                    <div className="h-6 w-px bg-white/10 mx-1 hidden md:block"></div>
 
+                    {/* Timer */}
+                    <div className="flex items-center gap-2 bg-slate-800/80 px-2 py-1.5 rounded-lg border border-white/5 text-white font-mono text-sm font-bold">
+                        <Clock size={12} className={isRunning ? 'text-indigo-400 animate-pulse' : 'text-slate-500'} />
+                        {formattedTime}
+                    </div>
+
+                    {/* Controls */}
+                    <div className="flex items-center gap-1">
                         {!sessionStarted ? (
-                            <button
-                                onClick={handleStartSession}
-                                className="ml-2 p-1.5 bg-emerald-500 hover:bg-emerald-400 rounded-lg transition-colors"
-                                title="Start Session"
-                            >
-                                <Play size={16} className="text-white" />
+                            <button onClick={handleStartSession} className="p-1.5 bg-emerald-500 hover:bg-emerald-400 rounded-md text-white shadow-lg shadow-emerald-500/20 transition-all active:scale-95">
+                                <Play size={14} fill="currentColor" />
                             </button>
                         ) : (
                             <>
-                                <button
-                                    onClick={isRunning ? pause : resume}
-                                    className="ml-2 p-1.5 bg-indigo-500 hover:bg-indigo-400 rounded-lg transition-colors"
-                                    title={isRunning ? 'Pause' : 'Resume'}
-                                >
-                                    {isRunning ? <Pause size={16} className="text-white" /> : <Play size={16} className="text-white" />}
+                                <button onClick={isRunning ? pause : resume} className={`p-1.5 rounded-md text-white transition-all active:scale-95 ${isRunning ? 'bg-amber-500 hover:bg-amber-400' : 'bg-emerald-500 hover:bg-emerald-400'}`}>
+                                    {isRunning ? <Pause size={14} fill="currentColor" /> : <Play size={14} fill="currentColor" />}
                                 </button>
-                                <button
-                                    onClick={handleResetSession}
-                                    className="p-1.5 bg-slate-600 hover:bg-slate-500 rounded-lg transition-colors"
-                                    title="Reset Session"
-                                >
-                                    <RotateCcw size={16} className="text-white" />
+                                <button onClick={handleResetSession} className="p-1.5 bg-slate-600 hover:bg-slate-500 rounded-md text-white transition-all active:scale-95">
+                                    <RotateCcw size={14} />
                                 </button>
-                                <button
-                                    onClick={handleFinish}
-                                    className="p-1.5 bg-emerald-600 hover:bg-emerald-500 rounded-lg transition-colors flex items-center gap-2"
-                                    title="Finish Interview"
-                                >
-                                    <CheckCircle size={16} className="text-white" />
+                                <button onClick={handleFinish} className="p-1.5 bg-indigo-600 hover:bg-indigo-500 rounded-md text-white transition-all active:scale-95">
+                                    <CheckCircle size={14} />
                                 </button>
                             </>
                         )}
@@ -143,108 +148,75 @@ const HRModule = () => {
                 </div>
             </header>
 
-            <div className="flex-grow grid grid-cols-1 lg:grid-cols-3 gap-4 min-h-0">
-                {/* Avatar / Visuals */}
-                <div className="lg:col-span-1 space-y-4 overflow-y-auto scrollbar-thin pr-2">
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        className="aspect-[3/4] rounded-3xl bg-slate-800 relative overflow-hidden group border border-white/10 shadow-2xl"
-                    >
-                        <img
-                            src="https://img.freepik.com/free-photo/portrait-young-businesswoman-holding-eyeglasses-hand-against-gray-backdrop_23-2148029483.jpg"
-                            className="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-700"
-                            alt="HR Avatar"
-                        />
-                        <div className="absolute bottom-0 inset-x-0 p-6 bg-gradient-to-t from-black via-black/80 to-transparent">
-                            <h3 className="text-xl font-bold text-white">Sarah Jenkins</h3>
-                            <p className="text-indigo-300 text-sm">HR Lead @ TechFlow</p>
-                            <div className="mt-2 flex items-center gap-2">
-                                <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
-                                <span className="text-xs text-slate-300">Active</span>
+            <div className="flex-grow grid grid-cols-1 lg:grid-cols-4 gap-2 min-h-0 relative z-10">
+                {/* Visuals & Analytics Column (Smaller) */}
+                <div className="lg:col-span-1 flex flex-col gap-2 min-h-0">
+                    {/* Compact Analytics Card */}
+                    <div className="flex-grow p-3 rounded-xl bg-slate-900/60 backdrop-blur-md border border-white/5 shadow-xl flex flex-col gap-3 overflow-y-auto custom-scrollbar">
+                        <div className="flex items-center justify-between text-white border-b border-white/5 pb-2 shrink-0">
+                            <div className="flex items-center gap-2">
+                                <Activity className="text-indigo-400" size={14} />
+                                <h4 className="text-xs font-bold">Live Sentiment</h4>
                             </div>
-                        </div>
-                    </motion.div>
-
-                    {/* Real-time Sentiment Analysis */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.2 }}
-                        className="p-6 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-800 border border-white/10 shadow-xl"
-                    >
-                        <div className="flex items-center gap-2 mb-6">
-                            <Activity className="text-rose-400" size={20} />
-                            <h4 className="font-bold text-white">Real-time Analytics</h4>
+                            <MoreHorizontal size={14} className="text-slate-600" />
                         </div>
 
-                        <div className="space-y-5">
+                        <div className="space-y-4">
                             {/* Confidence Meter */}
                             <div>
-                                <div className="flex justify-between text-xs text-slate-400 mb-2">
-                                    <div className="flex items-center gap-2">
-                                        <TrendingUp size={14} />
-                                        <span>Confidence</span>
+                                <div className="flex justify-between items-end mb-1">
+                                    <div className="flex items-center gap-1.5 text-slate-400 text-[10px] uppercase tracking-wider font-bold">
+                                        <Brain size={12} /> Confidence
                                     </div>
-                                    <span className={`font-semibold text-${confidenceInfo.color}-400`}>
-                                        {confidenceInfo.label}
-                                    </span>
+                                    <div className={`text-xs font-bold text-${confidenceInfo.color}-400`}>
+                                        {confidence}%
+                                    </div>
                                 </div>
-                                <div className="h-2 bg-slate-800 rounded-full overflow-hidden relative">
+                                <div className="h-1.5 bg-slate-800 rounded-full overflow-hidden">
                                     <motion.div
-                                        className={`h-full bg-${confidenceInfo.color}-500`}
+                                        className={`h-full rounded-full bg-gradient-to-r from-${confidenceInfo.color}-600 to-${confidenceInfo.color}-400`}
                                         initial={{ width: 0 }}
                                         animate={{ width: `${confidence}%` }}
-                                        transition={{ duration: 0.5 }}
+                                        transition={{ duration: 0.5, ease: "easeOut" }}
                                     />
                                 </div>
-                                <div className="text-right text-xs text-slate-500 mt-1">{confidence}%</div>
                             </div>
 
                             {/* Stress Level */}
                             <div>
-                                <div className="flex justify-between text-xs text-slate-400 mb-2">
-                                    <div className="flex items-center gap-2">
-                                        <AlertCircle size={14} />
-                                        <span>Stress Level</span>
+                                <div className="flex justify-between items-end mb-1">
+                                    <div className="flex items-center gap-1.5 text-slate-400 text-[10px] uppercase tracking-wider font-bold">
+                                        <HeartPulse size={12} /> Stress
                                     </div>
-                                    <span className={`font-semibold text-${stressInfo.color}-400`}>
-                                        {stressInfo.label}
-                                    </span>
+                                    <div className={`text-xs font-bold text-${stressInfo.color}-400`}>
+                                        {stressLevel}%
+                                    </div>
                                 </div>
-                                <div className="h-2 bg-slate-800 rounded-full overflow-hidden relative">
+                                <div className="h-1.5 bg-slate-800 rounded-full overflow-hidden">
                                     <motion.div
-                                        className={`h-full bg-${stressInfo.color}-500`}
+                                        className={`h-full rounded-full bg-gradient-to-r from-${stressInfo.color}-600 to-${stressInfo.color}-400`}
                                         initial={{ width: 0 }}
                                         animate={{ width: `${stressLevel}%` }}
-                                        transition={{ duration: 0.5 }}
+                                        transition={{ duration: 0.5, ease: "easeOut" }}
                                     />
                                 </div>
-                                <div className="text-right text-xs text-slate-500 mt-1">{stressLevel}%</div>
                             </div>
-
-                            {/* Tips */}
-                            {sessionStarted && (
-                                <motion.div
-                                    initial={{ opacity: 0, height: 0 }}
-                                    animate={{ opacity: 1, height: 'auto' }}
-                                    className="pt-4 border-t border-white/5"
-                                >
-                                    <h5 className="text-xs font-semibold text-slate-400 mb-2">💡 Quick Tips</h5>
-                                    <ul className="text-xs text-slate-500 space-y-1">
-                                        <li>• Maintain steady eye contact</li>
-                                        <li>• Use the STAR framework</li>
-                                        <li>• Take brief pauses to think</li>
-                                        <li>• Keep answers under 2 minutes</li>
-                                    </ul>
-                                </motion.div>
-                            )}
                         </div>
-                    </motion.div>
+
+                        {/* AI Insight Overlay */}
+                        <div className="mt-auto bg-indigo-500/10 border border-indigo-500/20 p-2 rounded-lg">
+                            <div className="flex gap-2 items-start">
+                                <Brain size={12} className="text-indigo-400 mt-0.5 shrink-0" />
+                                <p className="text-[10px] text-indigo-200 leading-snug">
+                                    Maintained good eye contact in the last response. Try to elaborate more on technical challenges.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                {/* Interaction Area */}
-                <div className="lg:col-span-2 h-full min-h-0 flex flex-col">
+                {/* Interaction Area (Voice Interface - Larger) */}
+                <div className="lg:col-span-3 h-full min-h-0 flex flex-col rounded-xl overflow-hidden shadow-2xl bg-slate-900/20 backdrop-blur-sm border border-white/5">
                     <VoiceInterface difficulty={difficulty} sessionActive={sessionStarted} />
                 </div>
             </div>

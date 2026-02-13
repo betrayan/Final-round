@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
 import {
     Settings as SettingsIcon, Bell, Volume2, Mic, Video, Globe,
-    Moon, Sun, Monitor, Lock, Eye, EyeOff, Key, Trash2,
+    Moon, Sun, Monitor, Lock, Key, Trash2,
     Save, Download, Upload, RefreshCw
 } from 'lucide-react';
 import { useToast } from '../context/ToastContext';
@@ -42,8 +41,6 @@ const Settings = () => {
         dataCollection: true
     });
 
-    const [showPassword, setShowPassword] = useState(false);
-
     const updateSetting = (key, value) => {
         setSettings(prev => ({ ...prev, [key]: value }));
     };
@@ -53,167 +50,105 @@ const Settings = () => {
         showToast('Settings saved successfully!', 'success');
     };
 
-    const handleExportData = () => {
-        console.log('Exporting user data...');
-        const dataStr = JSON.stringify(settings, null, 2);
-        const dataBlob = new Blob([dataStr], { type: 'application/json' });
-        const url = URL.createObjectURL(dataBlob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = 'nexusai-data.json';
-        link.click();
-        showToast('Data exported successfully!', 'success');
-    };
-
-    const handleImportData = () => {
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.accept = 'application/json';
-        input.onchange = (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    try {
-                        const imported = JSON.parse(event.target.result);
-                        setSettings(imported);
-                        showToast('Data imported successfully!', 'success');
-                    } catch (error) {
-                        showToast('Invalid file format!', 'error');
-                    }
-                };
-                reader.readAsText(file);
-            }
-        };
-        input.click();
-    };
-
-    const handleResetSettings = () => {
-        if (confirm('Reset all settings to default?')) {
-            setSettings({
-                theme: 'dark',
-                accentColor: 'indigo',
-                fontSize: 'medium',
-                emailNotifications: true,
-                pushNotifications: true,
-                weeklyReports: true,
-                achievementAlerts: true,
-                voiceRate: 1.0,
-                voicePitch: 1.0,
-                volume: 0.8,
-                micSensitivity: 'medium',
-                cameraQuality: 'high',
-                recordSessions: false,
-                language: 'en',
-                timezone: 'America/Los_Angeles',
-                dateFormat: 'MM/DD/YYYY',
-                profileVisibility: 'private',
-                showProgress: true,
-                dataCollection: true
-            });
-            showToast('Settings reset to defaults!', 'success');
-        }
-    };
-
-    const handleDeleteAccount = () => {
-        if (confirm('DELETE your account? This cannot be undone!')) {
-            showToast('Account deletion initiated. Contact support to complete.', 'error');
-        }
-    };
-
-    const handleChangePassword = () => {
-        showToast('Change password feature coming soon!', 'info');
-    };
-
     return (
-        <div className="h-[calc(100vh-4rem)] overflow-y-auto scrollbar-thin">
+        <div className="h-full flex flex-col overflow-hidden bg-slate-950 p-3 relative">
             {/* Compact Header */}
-            <div className="mb-4">
-                <h2 className="text-xl md:text-2xl font-bold text-white">Settings</h2>
-                <p className="text-xs text-slate-400">Customize your experience</p>
+            <div className="flex justify-between items-center mb-3 shrink-0 h-10 border-b border-white/5 pb-2">
+                <div>
+                    <h2 className="text-lg font-bold text-white flex items-center gap-2">
+                        <SettingsIcon size={18} className="text-indigo-400" />
+                        Settings
+                    </h2>
+                    <p className="text-[10px] text-slate-400">Customize your experience</p>
+                </div>
+                <button
+                    onClick={handleSave}
+                    className="px-3 py-1.5 text-xs font-bold bg-indigo-600 text-white rounded-lg flex items-center gap-1.5 hover:bg-indigo-500 transition-all shadow-lg shadow-indigo-500/20"
+                >
+                    <Save size={14} />
+                    Save Changes
+                </button>
             </div>
 
-            <div className="space-y-3">{/* All settings sections go here */}
-                {/* Appearance */}
-                <SettingsSection title="Appearance" icon={Monitor}>
-                    <SettingRow label="Theme">
-                        <div className="flex gap-2">
-                            {['light', 'dark', 'system'].map((theme) => (
-                                <button
-                                    key={theme}
-                                    onClick={() => updateSetting('theme', theme)}
-                                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${settings.theme === theme
-                                        ? 'bg-indigo-600 text-white'
-                                        : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
-                                        }`}
-                                >
-                                    {theme === 'light' && <Sun size={16} className="inline mr-1" />}
-                                    {theme === 'dark' && <Moon size={16} className="inline mr-1" />}
-                                    {theme === 'system' && <Monitor size={16} className="inline mr-1" />}
-                                    {theme.charAt(0).toUpperCase() + theme.slice(1)}
-                                </button>
-                            ))}
-                        </div>
-                    </SettingRow>
+            {/* Scrollable Compact Grid */}
+            <div className="flex-1 overflow-y-auto pr-1 pb-1">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
 
-                    <SettingRow label="Accent Color">
-                        <div className="flex gap-2">
-                            {['indigo', 'purple', 'cyan', 'emerald', 'rose'].map((color) => (
-                                <button
-                                    key={color}
-                                    onClick={() => updateSetting('accentColor', color)}
-                                    className={`w-8 h-8 rounded-full bg-${color}-500 ${settings.accentColor === color ? 'ring-2 ring-white ring-offset-2 ring-offset-slate-900' : ''
-                                        }`}
-                                />
-                            ))}
-                        </div>
-                    </SettingRow>
+                    {/* Appearance */}
+                    <SettingsSection title="Appearance" icon={Monitor}>
+                        <SettingRow label="Theme">
+                            <div className="flex gap-1">
+                                {['light', 'dark', 'system'].map((theme) => (
+                                    <button
+                                        key={theme}
+                                        onClick={() => updateSetting('theme', theme)}
+                                        className={`p-1.5 rounded-md text-[10px] font-bold transition-all ${settings.theme === theme
+                                            ? 'bg-indigo-600 text-white'
+                                            : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
+                                            }`}
+                                        title={theme}
+                                    >
+                                        {theme === 'light' && <Sun size={12} />}
+                                        {theme === 'dark' && <Moon size={12} />}
+                                        {theme === 'system' && <Monitor size={12} />}
+                                    </button>
+                                ))}
+                            </div>
+                        </SettingRow>
 
-                    <SettingRow label="Font Size">
-                        <select
-                            value={settings.fontSize}
-                            onChange={(e) => updateSetting('fontSize', e.target.value)}
-                            className="px-4 py-2 bg-slate-800 border border-white/10 rounded-lg text-slate-200 focus:outline-none focus:border-indigo-500"
-                        >
-                            <option value="small">Small</option>
-                            <option value="medium">Medium</option>
-                            <option value="large">Large</option>
-                        </select>
-                    </SettingRow>
-                </SettingsSection>
+                        <SettingRow label="Accent">
+                            <div className="flex gap-1.5">
+                                {['indigo', 'purple', 'cyan', 'emerald', 'rose'].map((color) => (
+                                    <button
+                                        key={color}
+                                        onClick={() => updateSetting('accentColor', color)}
+                                        className={`w-4 h-4 rounded-full bg-${color}-500 ${settings.accentColor === color ? 'ring-1 ring-white ring-offset-1 ring-offset-slate-900 scale-110' : ''
+                                            }`}
+                                    />
+                                ))}
+                            </div>
+                        </SettingRow>
 
-                {/* Notifications */}
-                <SettingsSection title="Notifications" icon={Bell}>
-                    <ToggleRow
-                        label="Email Notifications"
-                        description="Receive updates and reminders via email"
-                        checked={settings.emailNotifications}
-                        onChange={(val) => updateSetting('emailNotifications', val)}
-                    />
-                    <ToggleRow
-                        label="Push Notifications"
-                        description="Get real-time alerts on your device"
-                        checked={settings.pushNotifications}
-                        onChange={(val) => updateSetting('pushNotifications', val)}
-                    />
-                    <ToggleRow
-                        label="Weekly Progress Reports"
-                        description="Summary of your weekly performance"
-                        checked={settings.weeklyReports}
-                        onChange={(val) => updateSetting('weeklyReports', val)}
-                    />
-                    <ToggleRow
-                        label="Achievement Alerts"
-                        description="Get notified when you earn new badges"
-                        checked={settings.achievementAlerts}
-                        onChange={(val) => updateSetting('achievementAlerts', val)}
-                    />
-                </SettingsSection>
+                        <SettingRow label="Font Size">
+                            <select
+                                value={settings.fontSize}
+                                onChange={(e) => updateSetting('fontSize', e.target.value)}
+                                className="px-2 py-1 bg-slate-800 border border-white/10 rounded-md text-[10px] text-slate-200 focus:outline-none focus:border-indigo-500"
+                            >
+                                <option value="small">Small</option>
+                                <option value="medium">Medium</option>
+                                <option value="large">Large</option>
+                            </select>
+                        </SettingRow>
+                    </SettingsSection>
 
-                {/* Audio & Voice */}
-                <SettingsSection title="Audio & Voice" icon={Volume2}>
-                    <SettingRow label="Voice Speed">
-                        <div className="flex items-center gap-4 w-64">
+                    {/* Notifications */}
+                    <SettingsSection title="Notifications" icon={Bell}>
+                        <ToggleRow
+                            label="Email"
+                            checked={settings.emailNotifications}
+                            onChange={(val) => updateSetting('emailNotifications', val)}
+                        />
+                        <ToggleRow
+                            label="Push Alerts"
+                            checked={settings.pushNotifications}
+                            onChange={(val) => updateSetting('pushNotifications', val)}
+                        />
+                        <ToggleRow
+                            label="Weekly Reports"
+                            checked={settings.weeklyReports}
+                            onChange={(val) => updateSetting('weeklyReports', val)}
+                        />
+                        <ToggleRow
+                            label="Achievement Alerts"
+                            checked={settings.achievementAlerts}
+                            onChange={(val) => updateSetting('achievementAlerts', val)}
+                        />
+                    </SettingsSection>
+
+                    {/* Audio & Voice */}
+                    <SettingsSection title="Audio & Voice" icon={Volume2}>
+                        <SettingRow label="Speed">
                             <input
                                 type="range"
                                 min="0.5"
@@ -221,14 +156,11 @@ const Settings = () => {
                                 step="0.1"
                                 value={settings.voiceRate}
                                 onChange={(e) => updateSetting('voiceRate', parseFloat(e.target.value))}
-                                className="flex-1"
+                                className="w-20 h-1 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-indigo-500"
                             />
-                            <span className="text-sm text-slate-300 w-8">{settings.voiceRate.toFixed(1)}x</span>
-                        </div>
-                    </SettingRow>
+                        </SettingRow>
 
-                    <SettingRow label="Voice Pitch">
-                        <div className="flex items-center gap-4 w-64">
+                        <SettingRow label="Pitch">
                             <input
                                 type="range"
                                 min="0"
@@ -236,14 +168,11 @@ const Settings = () => {
                                 step="0.1"
                                 value={settings.voicePitch}
                                 onChange={(e) => updateSetting('voicePitch', parseFloat(e.target.value))}
-                                className="flex-1"
+                                className="w-20 h-1 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-indigo-500"
                             />
-                            <span className="text-sm text-slate-300 w-8">{settings.voicePitch.toFixed(1)}</span>
-                        </div>
-                    </SettingRow>
+                        </SettingRow>
 
-                    <SettingRow label="Volume">
-                        <div className="flex items-center gap-4 w-64">
+                        <SettingRow label="Volume">
                             <input
                                 type="range"
                                 min="0"
@@ -251,179 +180,114 @@ const Settings = () => {
                                 step="0.1"
                                 value={settings.volume}
                                 onChange={(e) => updateSetting('volume', parseFloat(e.target.value))}
-                                className="flex-1"
+                                className="w-20 h-1 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-indigo-500"
                             />
-                            <span className="text-sm text-slate-300 w-8">{Math.round(settings.volume * 100)}%</span>
+                        </SettingRow>
+
+                        <SettingRow label="Mic Sens.">
+                            <select
+                                value={settings.micSensitivity}
+                                onChange={(e) => updateSetting('micSensitivity', e.target.value)}
+                                className="px-2 py-1 bg-slate-800 border border-white/10 rounded-md text-[10px] text-slate-200 focus:outline-none focus:border-indigo-500"
+                            >
+                                <option value="low">Low</option>
+                                <option value="medium">Med</option>
+                                <option value="high">High</option>
+                            </select>
+                        </SettingRow>
+                    </SettingsSection>
+
+                    {/* Video Settings */}
+                    <SettingsSection title="Video" icon={Video}>
+                        <SettingRow label="Quality">
+                            <select
+                                value={settings.cameraQuality}
+                                onChange={(e) => updateSetting('cameraQuality', e.target.value)}
+                                className="px-2 py-1 bg-slate-800 border border-white/10 rounded-md text-[10px] text-slate-200 focus:outline-none focus:border-indigo-500"
+                            >
+                                <option value="low">480p</option>
+                                <option value="medium">720p</option>
+                                <option value="high">1080p</option>
+                            </select>
+                        </SettingRow>
+
+                        <ToggleRow
+                            label="Auto-Record"
+                            checked={settings.recordSessions}
+                            onChange={(val) => updateSetting('recordSessions', val)}
+                        />
+                    </SettingsSection>
+
+                    {/* Language & Region */}
+                    <SettingsSection title="Region" icon={Globe}>
+                        <SettingRow label="Language">
+                            <select
+                                value={settings.language}
+                                onChange={(e) => updateSetting('language', e.target.value)}
+                                className="px-2 py-1 bg-slate-800 border border-white/10 rounded-md text-[10px] text-slate-200 focus:outline-none focus:border-indigo-500"
+                            >
+                                <option value="en">English</option>
+                                <option value="es">Spanish</option>
+                                <option value="fr">French</option>
+                            </select>
+                        </SettingRow>
+
+                        <SettingRow label="Timezone">
+                            <select
+                                value={settings.timezone}
+                                onChange={(e) => updateSetting('timezone', e.target.value)}
+                                className="px-2 py-1 bg-slate-800 border border-white/10 rounded-md text-[10px] text-slate-200 focus:outline-none focus:border-indigo-500 max-w-[100px]"
+                            >
+                                <option value="America/Los_Angeles">PT</option>
+                                <option value="America/New_York">ET</option>
+                            </select>
+                        </SettingRow>
+                    </SettingsSection>
+
+                    {/* Privacy & Security */}
+                    <SettingsSection title="Privacy" icon={Lock}>
+                        <SettingRow label="Profile">
+                            <select
+                                value={settings.profileVisibility}
+                                onChange={(e) => updateSetting('profileVisibility', e.target.value)}
+                                className="px-2 py-1 bg-slate-800 border border-white/10 rounded-md text-[10px] text-slate-200 focus:outline-none focus:border-indigo-500"
+                            >
+                                <option value="public">Public</option>
+                                <option value="private">Private</option>
+                            </select>
+                        </SettingRow>
+
+                        <ToggleRow
+                            label="Shared Progress"
+                            checked={settings.showProgress}
+                            onChange={(val) => updateSetting('showProgress', val)}
+                        />
+
+                        <div className="pt-2 border-t border-white/5 flex justify-end">
+                            <button className="text-[10px] text-indigo-400 hover:text-indigo-300 flex items-center gap-1 transition-colors">
+                                <Key size={10} />
+                                Change Pwd
+                            </button>
                         </div>
-                    </SettingRow>
+                    </SettingsSection>
 
-                    <SettingRow label="Microphone Sensitivity">
-                        <select
-                            value={settings.micSensitivity}
-                            onChange={(e) => updateSetting('micSensitivity', e.target.value)}
-                            className="px-4 py-2 bg-slate-800 border border-white/10 rounded-lg text-slate-200 focus:outline-none focus:border-indigo-500"
-                        >
-                            <option value="low">Low</option>
-                            <option value="medium">Medium</option>
-                            <option value="high">High</option>
-                        </select>
-                    </SettingRow>
-                </SettingsSection>
-
-                {/* Video Settings */}
-                <SettingsSection title="Video" icon={Video}>
-                    <SettingRow label="Camera Quality">
-                        <select
-                            value={settings.cameraQuality}
-                            onChange={(e) => updateSetting('cameraQuality', e.target.value)}
-                            className="px-4 py-2 bg-slate-800 border border-white/10 rounded-lg text-slate-200 focus:outline-none focus:border-indigo-500"
-                        >
-                            <option value="low">Low (480p)</option>
-                            <option value="medium">Medium (720p)</option>
-                            <option value="high">High (1080p)</option>
-                        </select>
-                    </SettingRow>
-
-                    <ToggleRow
-                        label="Record Practice Sessions"
-                        description="Automatically save video recordings of your sessions"
-                        checked={settings.recordSessions}
-                        onChange={(val) => updateSetting('recordSessions', val)}
-                    />
-                </SettingsSection>
-
-                {/* Language & Region */}
-                <SettingsSection title="Language & Region" icon={Globe}>
-                    <SettingRow label="Language">
-                        <select
-                            value={settings.language}
-                            onChange={(e) => updateSetting('language', e.target.value)}
-                            className="px-4 py-2 bg-slate-800 border border-white/10 rounded-lg text-slate-200 focus:outline-none focus:border-indigo-500"
-                        >
-                            <option value="en">English</option>
-                            <option value="es">Spanish</option>
-                            <option value="fr">French</option>
-                            <option value="de">German</option>
-                            <option value="hi">Hindi</option>
-                        </select>
-                    </SettingRow>
-
-                    <SettingRow label="Timezone">
-                        <select
-                            value={settings.timezone}
-                            onChange={(e) => updateSetting('timezone', e.target.value)}
-                            className="px-4 py-2 bg-slate-800 border border-white/10 rounded-lg text-slate-200 focus:outline-none focus:border-indigo-500"
-                        >
-                            <option value="America/Los_Angeles">Pacific Time (PT)</option>
-                            <option value="America/Denver">Mountain Time (MT)</option>
-                            <option value="America/Chicago">Central Time (CT)</option>
-                            <option value="America/New_York">Eastern Time (ET)</option>
-                        </select>
-                    </SettingRow>
-
-                    <SettingRow label="Date Format">
-                        <select
-                            value={settings.dateFormat}
-                            onChange={(e) => updateSetting('dateFormat', e.target.value)}
-                            className="px-4 py-2 bg-slate-800 border border-white/10 rounded-lg text-slate-200 focus:outline-none focus:border-indigo-500"
-                        >
-                            <option value="MM/DD/YYYY">MM/DD/YYYY</option>
-                            <option value="DD/MM/YYYY">DD/MM/YYYY</option>
-                            <option value="YYYY-MM-DD">YYYY-MM-DD</option>
-                        </select>
-                    </SettingRow>
-                </SettingsSection>
-
-                {/* Privacy & Security */}
-                <SettingsSection title="Privacy & Security" icon={Lock}>
-                    <SettingRow label="Profile Visibility">
-                        <select
-                            value={settings.profileVisibility}
-                            onChange={(e) => updateSetting('profileVisibility', e.target.value)}
-                            className="px-4 py-2 bg-slate-800 border border-white/10 rounded-lg text-slate-200 focus:outline-none focus:border-indigo-500"
-                        >
-                            <option value="public">Public</option>
-                            <option value="private">Private</option>
-                            <option value="friends">Friends Only</option>
-                        </select>
-                    </SettingRow>
-
-                    <ToggleRow
-                        label="Show Progress to Others"
-                        description="Allow others to see your learning progress"
-                        checked={settings.showProgress}
-                        onChange={(val) => updateSetting('showProgress', val)}
-                    />
-
-                    <ToggleRow
-                        label="Data Collection"
-                        description="Help improve NexusAI by sharing anonymous usage data"
-                        checked={settings.dataCollection}
-                        onChange={(val) => updateSetting('dataCollection', val)}
-                    />
-
-                    <div className="pt-3 border-t border-white/5">
-                        <button onClick={handleChangePassword} className="text-xs text-indigo-400 hover:text-indigo-300 flex items-center gap-2 transition-colors">
-                            <Key size={14} />
-                            Change Password
-                        </button>
-                    </div>
-                </SettingsSection>
-
-                {/* Data Management */}
-                <SettingsSection title="Data Management" icon={Download}>
-                    <div className="space-y-3">
-                        <button
-                            onClick={handleExportData}
-                            className="w-full px-4 py-3 bg-slate-800 hover:bg-slate-700 text-white rounded-xl flex items-center justify-between transition-colors border border-white/5"
-                        >
-                            <span className="flex items-center gap-2">
-                                <Download size={18} />
-                                Export My Data
-                            </span>
-                        </button>
-
-                        <button
-                            onClick={handleImportData}
-                            className="w-full px-4 py-3 bg-slate-800 hover:bg-slate-700 text-white rounded-xl flex items-center justify-between transition-colors border border-white/5"
-                        >
-                            <span className="flex items-center gap-2">
-                                <Upload size={18} />
-                                Import Data
-                            </span>
-                        </button>
-
-                        <button
-                            onClick={handleResetSettings}
-                            className="w-full px-4 py-3 bg-slate-800 hover:bg-slate-700 text-amber-400 rounded-xl flex items-center justify-between transition-colors border border-white/5"
-                        >
-                            <span className="flex items-center gap-2">
-                                <RefreshCw size={18} />
-                                Reset to Defaults
-                            </span>
-                        </button>
-
-                        <button
-                            onClick={handleDeleteAccount}
-                            className="w-full px-4 py-3 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 rounded-xl flex items-center justify-between transition-colors border border-rose-500/20"
-                        >
-                            <span className="flex items-center gap-2">
-                                <Trash2 size={18} />
-                                Delete Account
-                            </span>
-                        </button>
-                    </div>
-                </SettingsSection>
-
-                {/* Save Button */}
-                <div className="flex justify-end pt-2">
-                    <button
-                        onClick={handleSave}
-                        className="px-4 py-2 text-sm bg-indigo-600 text-white rounded-lg flex items-center gap-2 hover:bg-indigo-500 transition-all"
-                    >
-                        <Save size={16} />
-                        Save Settings
-                    </button>
+                    {/* Data Management */}
+                    <SettingsSection title="Data" icon={Download}>
+                        <div className="grid grid-cols-2 gap-2">
+                            <button className="px-2 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg flex items-center justify-center gap-1.5 transition-colors border border-white/5 text-[10px]">
+                                <Download size={12} /> Export
+                            </button>
+                            <button className="px-2 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg flex items-center justify-center gap-1.5 transition-colors border border-white/5 text-[10px]">
+                                <Upload size={12} /> Import
+                            </button>
+                            <button className="px-2 py-1.5 bg-slate-800 hover:bg-slate-700 text-amber-400 rounded-lg flex items-center justify-center gap-1.5 transition-colors border border-white/5 text-[10px]">
+                                <RefreshCw size={12} /> Reset
+                            </button>
+                            <button className="px-2 py-1.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 rounded-lg flex items-center justify-center gap-1.5 transition-colors border border-rose-500/20 text-[10px]">
+                                <Trash2 size={12} /> Delete
+                            </button>
+                        </div>
+                    </SettingsSection>
                 </div>
             </div>
         </div>
@@ -431,37 +295,34 @@ const Settings = () => {
 };
 
 const SettingsSection = ({ title, icon: Icon, children }) => (
-    <div className="p-4 rounded-2xl bg-slate-900/50 border border-white/5">
-        <h3 className="text-base font-bold text-white mb-3 flex items-center gap-2">
-            <Icon size={16} className="text-indigo-400" />
+    <div className="p-3 rounded-xl bg-slate-900/50 border border-white/5 h-full">
+        <h3 className="text-xs font-bold text-white mb-2 flex items-center gap-1.5">
+            <Icon size={12} className="text-indigo-400" />
             {title}
         </h3>
-        <div className="space-y-3">
+        <div className="space-y-1.5">
             {children}
         </div>
     </div>
 );
 
 const SettingRow = ({ label, children }) => (
-    <div className="flex items-center justify-between py-1">
-        <span className="text-slate-300 font-medium text-sm">{label}</span>
+    <div className="flex items-center justify-between py-0.5">
+        <span className="text-slate-400 font-medium text-[10px]">{label}</span>
         <div>{children}</div>
     </div>
 );
 
-const ToggleRow = ({ label, description, checked, onChange }) => (
-    <div className="flex items-start justify-between py-1">
-        <div className="flex-1">
-            <div className="text-slate-300 font-medium text-sm">{label}</div>
-            {description && <div className="text-[10px] text-slate-500">{description}</div>}
-        </div>
+const ToggleRow = ({ label, checked, onChange }) => (
+    <div className="flex items-center justify-between py-0.5">
+        <span className="text-slate-400 font-medium text-[10px]">{label}</span>
         <button
             onClick={() => onChange(!checked)}
-            className={`ml-4 relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${checked ? 'bg-indigo-600' : 'bg-slate-700'
+            className={`relative inline-flex h-3.5 w-7 items-center rounded-full transition-colors ${checked ? 'bg-indigo-600' : 'bg-slate-700'
                 }`}
         >
             <span
-                className={`inline-block h-3 w-3 transform rounded-full bg-white transition-transform ${checked ? 'translate-x-5' : 'translate-x-1'
+                className={`inline-block h-2.5 w-2.5 transform rounded-full bg-white transition-transform ${checked ? 'translate-x-3.5' : 'translate-x-0.5'
                     }`}
             />
         </button>

@@ -201,7 +201,7 @@ function AppContent() {
 
         <Route path="/resume" element={
           <ProtectedRoute>
-            <ResumeUpload />
+            <MainLayout><ResumeAnalyzer /></MainLayout>
           </ProtectedRoute>
         } />
 
