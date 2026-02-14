@@ -8,7 +8,7 @@ const InterviewerScene = ({ isSpeaking }) => {
     // Generate an initial "Greeting" state
     const [isGreeting, setIsGreeting] = useState(true);
     const [displayedText, setDisplayedText] = useState("");
-    const greetingText = "Hi, I'm ready! 👋";
+    const greetingText = "Hi, Are you ready! 👋";
 
     useEffect(() => {
         // Typing animation
