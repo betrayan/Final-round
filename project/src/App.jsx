@@ -22,6 +22,9 @@ import { AssessmentProvider, useAssessment } from './context/AssessmentContext';
 import RoleSelectionModal from './components/modals/RoleSelectionModal';
 import CongratsModal from './components/modals/CongratsModal';
 
+import { Canvas } from '@react-three/fiber';
+import GlobalBackground from './components/3d/GlobalBackground';
+
 // Protected Route Wrapper
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated } = useGlobal();
@@ -81,6 +84,14 @@ function MainLayout({ children }) {
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden opacity-30">
         <div className="absolute top-[-20%] left-[-10%] w-[600px] h-[600px] bg-indigo-600/15 blur-[120px] rounded-full"></div>
         <div className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-blue-600/15 blur-[120px] rounded-full"></div>
+      </div>
+
+      {/* Global 3D Background */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <Canvas camera={{ position: [0, 0, 10], fov: 75 }} gl={{ alpha: true }}>
+          <color attach="background" args={['transparent']} />
+          <GlobalBackground />
+        </Canvas>
       </div>
 
       <Sidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />

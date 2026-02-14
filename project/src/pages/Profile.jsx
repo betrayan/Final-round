@@ -6,6 +6,8 @@ import {
 } from 'lucide-react';
 import { formatDate, getInitials } from '../utils/helpers';
 import { useToast } from '../context/ToastContext';
+import { Canvas } from '@react-three/fiber';
+import Character3D from '../components/3d/Character3D';
 
 const Profile = () => {
     const { user } = useGlobal();
@@ -107,9 +109,20 @@ const Profile = () => {
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-2 h-full">
                     {/* Left Column - Avatar & Basic Info (3 cols) */}
                     <div className="col-span-1 md:col-span-3 lg:col-span-3 flex flex-col gap-2">
+                        {/* 3D Character Display */}
+                        <div className="h-48 rounded-xl bg-slate-900/50 border border-white/5 overflow-hidden relative">
+                            <div className="absolute inset-0 bg-gradient-to-b from-indigo-500/10 to-transparent pointer-events-none" />
+                            <Canvas camera={{ position: [0, 0, 3.5], fov: 45 }}>
+                                <ambientLight intensity={0.8} />
+                                <pointLight position={[5, 5, 5]} intensity={1} />
+                                <spotLight position={[-5, 5, 5]} angle={0.5} penumbra={1} color="cyan" intensity={2} />
+                                <Character3D />
+                            </Canvas>
+                        </div>
+
                         <div className="p-3 rounded-xl bg-gradient-to-br from-slate-900 to-slate-800 border border-white/5 flex flex-col items-center justify-center text-center">
-                            <div className="relative w-16 h-16 mb-2 group">
-                                <div className="w-full h-full rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-xl font-bold text-white shadow-xl shadow-indigo-500/20 border-2 border-white/10">
+                            <div className="relative w-12 h-12 mb-2 group">
+                                <div className="w-full h-full rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-sm font-bold text-white shadow-xl shadow-indigo-500/20 border-2 border-white/10">
                                     {getInitials(profileData.name)}
                                 </div>
                                 {isEditing && (
@@ -234,8 +247,8 @@ const Profile = () => {
                                             </div>
                                         </div>
                                         <div className={`text-xs font-bold px-1.5 py-0.5 rounded-md ${activity.score >= 85 ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' :
-                                                activity.score >= 70 ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20' :
-                                                    'bg-amber-500/10 text-amber-400 border border-amber-500/20'
+                                            activity.score >= 70 ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20' :
+                                                'bg-amber-500/10 text-amber-400 border border-amber-500/20'
                                             }`}>
                                             {activity.score}%
                                         </div>

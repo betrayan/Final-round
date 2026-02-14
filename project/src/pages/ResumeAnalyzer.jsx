@@ -158,7 +158,7 @@ const ResumeAnalyzer = () => {
                                             </div>
                                             <span className="text-xs font-bold uppercase tracking-wider">{loadingMessage.type}</span>
                                         </div>
-                                        <p className="text-slate-200 text-lg font-medium leading-relaxed">"{loadingMessage.text}"</p>
+                                        <p className="text-white text-xl font-semibold leading-relaxed drop-shadow-lg">"{loadingMessage.text}"</p>
                                     </motion.div>
                                 </AnimatePresence>
                             </div>
@@ -179,24 +179,30 @@ const ResumeAnalyzer = () => {
                             animate={{ opacity: 1, y: 0 }}
                             className="h-full w-full flex items-center justify-center p-4"
                         >
-                            <label className="group relative w-full max-w-2xl aspect-video rounded-3xl border-2 border-dashed border-slate-700 hover:border-indigo-500/50 transition-all duration-300 bg-slate-900/30 hover:bg-slate-900/50 backdrop-blur-sm flex flex-col items-center justify-center cursor-pointer overflow-hidden">
+                            <label className="group relative w-full max-w-2xl aspect-video rounded-3xl border-2 border-dashed border-slate-600 hover:border-indigo-500 transition-all duration-300 bg-slate-900/50 hover:bg-slate-800/80 backdrop-blur-sm flex flex-col items-center justify-center cursor-pointer overflow-hidden shadow-2xl shadow-black/20">
                                 <input type="file" className="hidden" accept=".pdf" onChange={handleFileUpload} />
 
-                                <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 via-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                                <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 via-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-                                <div className="relative z-10 p-5 bg-slate-800/80 rounded-2xl mb-6 shadow-xl group-hover:scale-110 transition-transform duration-300 border border-slate-700 group-hover:border-indigo-500/30">
-                                    <UploadCloud size={48} className="text-slate-400 group-hover:text-indigo-400 transition-colors" />
+                                <div className="relative z-10 p-6 bg-slate-800 rounded-2xl mb-6 shadow-xl group-hover:scale-105 transition-transform duration-300 border border-slate-600 group-hover:border-indigo-400">
+                                    <UploadCloud size={52} className="text-slate-300 group-hover:text-indigo-400 transition-colors" />
                                 </div>
 
-                                <h3 className="text-3xl font-bold text-white mb-3 tracking-tight">Drop your resume here</h3>
-                                <p className="text-slate-400 max-w-md text-center mb-8">
-                                    Upload your PDF to get instant <span className="text-indigo-400 font-medium">ATS scoring</span>, <span className="text-purple-400 font-medium">skill gap analysis</span>, and <span className="text-emerald-400 font-medium">market insights</span>.
+                                <h3 className="text-3xl font-bold text-white mb-3 tracking-tight group-hover:text-indigo-200 transition-colors">Drop your resume here</h3>
+                                <p className="text-slate-300 max-w-md text-center mb-8 text-sm leading-relaxed px-4">
+                                    Upload your PDF to get instant <span className="text-indigo-300 font-semibold">ATS scoring</span>, <span className="text-purple-300 font-semibold">skill gap analysis</span>, and <span className="text-emerald-300 font-semibold">market insights</span>.
                                 </p>
 
-                                <div className="flex gap-4 text-xs text-slate-500 font-mono">
-                                    <span className="flex items-center gap-1"><FileText size={12} /> PDF Only</span>
-                                    <span className="flex items-center gap-1"><Share2 size={12} /> Secure</span>
-                                    <span className="flex items-center gap-1"><TrendingUp size={12} /> Instant</span>
+                                <div className="flex gap-4 text-xs text-slate-400 font-medium bg-slate-900/50 px-4 py-2 rounded-full border border-white/5">
+                                    <span className="flex items-center gap-1.5"><FileText size={14} className="text-indigo-400" /> PDF Only</span>
+                                    <div className="w-px h-4 bg-slate-700"></div>
+                                    <span className="flex items-center gap-1.5"><Share2 size={14} className="text-emerald-400" /> Secure Analysis</span>
+                                    <div className="w-px h-4 bg-slate-700"></div>
+                                    <span className="flex items-center gap-1.5"><TrendingUp size={14} className="text-purple-400" /> Instant Results</span>
+                                </div>
+
+                                <div className="mt-8 px-6 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold text-sm shadow-lg shadow-indigo-500/20 transition-all transform translate-y-2 opacity-0 group-hover:opacity-100 group-hover:translate-y-0">
+                                    Browse Files
                                 </div>
                             </label>
                         </motion.div>
@@ -251,8 +257,8 @@ const ResumeAnalyzer = () => {
                                         </div>
 
                                         <div className={`text-center px-4 py-2 rounded-xl border ${resumeData.totalScore > 75
-                                                ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400"
-                                                : "bg-amber-500/10 border-amber-500/20 text-amber-400"
+                                            ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400"
+                                            : "bg-amber-500/10 border-amber-500/20 text-amber-400"
                                             }`}>
                                             <p className="font-bold text-sm">
                                                 {resumeData.totalScore > 75 ? "Excellent Profile Structure" : "Optimization Recommended"}
@@ -322,8 +328,8 @@ const ResumeAnalyzer = () => {
                                                         animate={{ width: `${item.score}%` }}
                                                         transition={{ duration: 1, delay: 0.5 + (index * 0.1) }}
                                                         className={`h-full rounded-full ${item.score > 70 ? 'bg-gradient-to-r from-emerald-500 to-emerald-400' :
-                                                                item.score > 40 ? 'bg-gradient-to-r from-amber-500 to-amber-400' :
-                                                                    'bg-gradient-to-r from-rose-500 to-rose-400'
+                                                            item.score > 40 ? 'bg-gradient-to-r from-amber-500 to-amber-400' :
+                                                                'bg-gradient-to-r from-rose-500 to-rose-400'
                                                             }`}
                                                     />
                                                 </div>

@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useGlobal } from '../context/GlobalContext';
 import { Hexagon, ArrowRight, Lock, Mail, Cpu, Globe } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { Canvas } from '@react-three/fiber';
+import Entrance3D from '../components/3d/Entrance3D';
 
 const Login = () => {
     const navigate = useNavigate();
@@ -30,23 +32,17 @@ const Login = () => {
                 initial={{ opacity: 0, x: -50 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8 }}
-                className="hidden lg:flex w-1/2 relative items-center justify-center bg-indigo-600 overflow-hidden"
+                className="hidden lg:flex w-1/2 relative items-center justify-center bg-black overflow-hidden"
             >
-                <div className="absolute inset-0 bg-gradient-to-br from-indigo-800 to-slate-900 opacity-90"></div>
+                <div className="absolute inset-0 w-full h-full">
+                    <Canvas camera={{ position: [0, 0, 6], fov: 50 }}>
+                        <ambientLight intensity={0.5} />
+                        <pointLight position={[10, 10, 10]} intensity={1} />
+                        <Entrance3D />
+                    </Canvas>
+                </div>
 
-                {/* Abstract Shapes */}
-                <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
-                    className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] border border-white/10 rounded-full"
-                ></motion.div>
-                <motion.div
-                    animate={{ rotate: -360 }}
-                    transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
-                    className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] border border-white/5 rounded-full"
-                ></motion.div>
-
-                <div className="relative z-10 p-12 text-white max-w-lg">
+                <div className="relative z-10 p-12 text-white max-w-lg pointer-events-none">
                     <motion.div
                         initial={{ y: 20, opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}

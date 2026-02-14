@@ -1,5 +1,6 @@
 import React from 'react';
 import { Mic, MicOff, Users, MessageSquare, MoreHorizontal, Video } from 'lucide-react';
+import MeetingRoom3D from './3d/MeetingRoom3D';
 
 const participants = [
     { id: 1, name: 'Atlas (AI)', role: 'Moderator', status: 'speaking', avatar: 'https://api.dicebear.com/9.x/avataaars/svg?seed=Atlas' },
@@ -30,54 +31,14 @@ const GDLobby = () => {
                 </button>
             </div>
 
-            {/* Grid */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 flex-grow">
-                {participants.map((p) => (
-                    <div key={p.id} className={`group relative rounded-2xl overflow-hidden transition-all duration-300 ${p.status === 'speaking' ? 'ring-2 ring-indigo-500 shadow-[0_0_20px_rgba(99,102,241,0.3)]' : 'border border-white/5 bg-slate-900/40 hover:bg-slate-900/60'}`}>
-                        {/* Status Overlay */}
-                        <div className="absolute top-3 right-3 z-10">
-                            {p.status === 'muted' ? (
-                                <div className="bg-black/50 backdrop-blur-md p-1.5 rounded-full text-white/50 border border-white/10">
-                                    <MicOff size={12} />
-                                </div>
-                            ) : (
-                                <div className={`bg-black/50 backdrop-blur-md p-1.5 rounded-full border border-white/10 ${p.status === 'speaking' ? 'text-indigo-400' : 'text-white/80'}`}>
-                                    <Mic size={12} className={p.status === 'speaking' ? 'animate-pulse' : ''} />
-                                </div>
-                            )}
-                        </div>
+            {/* 3D Meeting Room View */}
+            <div className="relative flex-grow rounded-2xl overflow-hidden bg-slate-900/50 border border-white/5 shadow-inner">
+                <div className="absolute inset-0 z-0">
+                    <MeetingRoom3D />
+                </div>
 
-                        {/* Avatar */}
-                        <div className="absolute inset-x-0 top-0 bottom-12 flex items-center justify-center p-4">
-                            <div className="relative w-24 h-24">
-                                <img src={p.avatar} alt={p.name} className="w-full h-full rounded-full object-cover bg-slate-800 shadow-xl" />
-                                {p.status === 'speaking' && (
-                                    <>
-                                        <span className="absolute inset-0 rounded-full border-2 border-indigo-500 animate-[ping_2s_linear_infinite]"></span>
-                                        <span className="absolute inset-0 rounded-full border border-indigo-500 animate-[ping_2s_linear_infinite_1s]"></span>
-                                    </>
-                                )}
-                            </div>
-                        </div>
-
-                        {/* Footer Info */}
-                        <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/90 to-transparent p-3 pt-6">
-                            <div className="flex justify-between items-end">
-                                <div>
-                                    <h3 className="font-bold text-white text-sm leading-tight">{p.name}</h3>
-                                    <p className="text-[10px] text-indigo-300 font-medium uppercase tracking-wide">{p.role}</p>
-                                </div>
-                                {p.status === 'speaking' && (
-                                    <div className="flex gap-0.5 h-3 items-end">
-                                        <span className="w-0.5 h-2 bg-indigo-400 animate-pulse"></span>
-                                        <span className="w-0.5 h-3 bg-indigo-400 animate-pulse delay-75"></span>
-                                        <span className="w-0.5 h-1.5 bg-indigo-400 animate-pulse delay-150"></span>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                ))}
+                {/* Optional minimal overlay for participant names if they aren't clear in 3D */}
+                {/* Keeping the controls separate below */}
             </div>
 
             {/* Controls */}

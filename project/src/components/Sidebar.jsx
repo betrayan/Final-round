@@ -33,7 +33,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                 ></motion.div>
             )}
 
-            <aside className={`fixed lg:sticky top-0 h-screen w-[220px] sm:w-[240px] md:w-[260px] glass-panel backdrop-blur-3xl border-r border-white/10 z-40 transition-all duration-300 ease-out flex flex-col shadow-2xl ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
+            <aside className={`fixed lg:sticky top-0 h-screen w-[220px] sm:w-[240px] md:w-[260px] bg-slate-950/95 backdrop-blur-xl border-r border-white/10 z-40 transition-all duration-300 ease-out flex flex-col shadow-2xl ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
                 {/* Animated Background Orbs */}
                 <div className="absolute inset-0 pointer-events-none overflow-hidden">
                     <motion.div
@@ -134,7 +134,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
 const NavItem = ({ to, icon: Icon, label }) => (
     <NavLink
         to={to}
-        className={({ isActive }) => `flex items-center gap-3 px-3 py-3 rounded-xl font-medium text-sm transition-all duration-300 group relative overflow-hidden ${isActive ? 'text-white bg-gradient-to-r from-emerald-500/20 to-teal-500/20 border border-emerald-500/30 shadow-lg shadow-emerald-500/10' : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent hover:border-white/10'}`}
+        className={({ isActive }) => `flex items-center gap-3 px-3 py-3 rounded-xl font-medium text-sm transition-all duration-300 group relative overflow-hidden ${isActive ? 'text-white bg-gradient-to-r from-emerald-500/20 to-teal-500/20 border border-emerald-500/30 shadow-lg shadow-emerald-500/10' : 'text-slate-300 hover:text-white hover:bg-white/5 border border-transparent hover:border-white/10'}`}
     >
         {({ isActive }) => (
             <>
