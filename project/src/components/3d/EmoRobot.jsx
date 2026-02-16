@@ -49,12 +49,12 @@ const EmoEyes = ({ expression }) => {
         <group position={[0, 0.1, 0.52]}>
             {/* Left Eye */}
             <RoundedBox ref={leftEyeRef} args={[0.35, 0.35, 0.02]} radius={0.08} smoothness={4} position={[-0.4, 0, 0]}>
-                <meshBasicMaterial color={eyeColor} />
+                <meshStandardMaterial color={eyeColor} emissive={eyeColor} emissiveIntensity={2} />
             </RoundedBox>
 
             {/* Right Eye */}
             <RoundedBox ref={rightEyeRef} args={[0.35, 0.35, 0.02]} radius={0.08} smoothness={4} position={[0.4, 0, 0]}>
-                <meshBasicMaterial color={eyeColor} />
+                <meshStandardMaterial color={eyeColor} emissive={eyeColor} emissiveIntensity={2} />
             </RoundedBox>
         </group>
     );
@@ -123,32 +123,21 @@ const EmoRobot = ({ isSpeaking, isListening, isGreeting }) => {
                 {/* The Eyes */}
                 <EmoEyes expression={expression} />
 
-                {/* Mouth / Tongue (Only when speaking or feeling cheeky) */}
-                {isSpeaking && (
-                    <group position={[0, -0.35, 0.52]}>
-                        <Torus args={[0.08, 0.03, 16, 32]} rotation={[0, 0, 0]} scale={[1, 0.6, 1]}>
-                            <meshBasicMaterial color="#f43f5e" />
-                        </Torus>
-                    </group>
-                )}
+                {/* Mouth Removed as per request */}
 
                 {/* HEADPHONES (Purple/Blue from reference) */}
                 <group position={[0.82, 0, 0]}>
-                    {/* Ear Cup */}
                     <Cylinder args={[0.25, 0.25, 0.3]} rotation={[0, 0, Math.PI / 2]}>
                         <meshStandardMaterial color="#4f46e5" roughness={0.2} metalness={0.5} />
                     </Cylinder>
-                    {/* Light Ring */}
                     <Torus args={[0.18, 0.02, 16, 32]} rotation={[0, Math.PI / 2, 0]} position={[0.16, 0, 0]}>
                         <meshStandardMaterial color={expression === 'greeting' ? '#34d399' : '#a78bfa'} emissive={expression === 'greeting' ? '#34d399' : '#a78bfa'} emissiveIntensity={2} />
                     </Torus>
                 </group>
                 <group position={[-0.82, 0, 0]}>
-                    {/* Ear Cup */}
                     <Cylinder args={[0.25, 0.25, 0.3]} rotation={[0, 0, Math.PI / 2]}>
                         <meshStandardMaterial color="#4f46e5" roughness={0.2} metalness={0.5} />
                     </Cylinder>
-                    {/* Light Ring */}
                     <Torus args={[0.18, 0.02, 16, 32]} rotation={[0, Math.PI / 2, 0]} position={[-0.16, 0, 0]}>
                         <meshStandardMaterial color={expression === 'greeting' ? '#34d399' : '#a78bfa'} emissive={expression === 'greeting' ? '#34d399' : '#a78bfa'} emissiveIntensity={2} />
                     </Torus>
@@ -158,6 +147,22 @@ const EmoRobot = ({ isSpeaking, isListening, isGreeting }) => {
                 <Torus args={[0.9, 0.08, 16, 64]} arc={Math.PI} rotation={[0, 0, 0]} position={[0, 0, 0]}>
                     <meshStandardMaterial color="#4338ca" />
                 </Torus>
+            </group>
+
+            {/* BODY / NECK Area - Adding a Core Reactor */}
+            <group position={[0, -0.6, 0]}>
+                <Cylinder args={[0.15, 0.15, 0.1]} rotation={[Math.PI / 2, 0, 0]} position={[0, 0.1, 0]}>
+                    <meshStandardMaterial color="#1e293b" />
+                </Cylinder>
+                {/* Glowing Core */}
+                <group position={[0, -0.1, 0]}>
+                    <sphereGeometry args={[0.12, 32, 32]} />
+                    <meshStandardMaterial
+                        color={isSpeaking ? "#f43f5e" : isListening ? "#3b82f6" : "#10b981"}
+                        emissive={isSpeaking ? "#f43f5e" : isListening ? "#3b82f6" : "#10b981"}
+                        emissiveIntensity={2}
+                    />
+                </group>
             </group>
 
             {/* LEGS & FEET (Attached directly to head bottom like EMO) */}

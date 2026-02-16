@@ -217,7 +217,7 @@ const HRModule = () => {
 
                 {/* Interaction Area (Voice Interface - Larger) */}
                 <div className="lg:col-span-3 h-full min-h-0 flex flex-col rounded-xl overflow-hidden shadow-2xl bg-slate-900/20 backdrop-blur-sm border border-white/5">
-                    <VoiceInterface difficulty={difficulty} sessionActive={sessionStarted} />
+                    <VoiceInterface difficulty={difficulty} sessionActive={sessionStarted} type="hr" />
                 </div>
             </div>
         </div>

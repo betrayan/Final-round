@@ -62,6 +62,16 @@ const InterviewerScene = ({ isSpeaking }) => {
             <SpotLight position={[2, 4, 3]} angle={0.5} penumbra={1} intensity={3} color="#a78bfa" distance={10} />
             <SpotLight position={[-2, 4, 3]} angle={0.5} penumbra={1} intensity={2} color="#34d399" distance={10} />
             <ContactShadows opacity={0.4} scale={10} blur={2.5} far={4} color="#000000" position={[0, -1.6, 0]} />
+
+            {/* Holographic Platform */}
+            <mesh position={[0, -1.8, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+                <ringGeometry args={[1.5, 3, 32]} />
+                <meshStandardMaterial color="#6366f1" transparent opacity={0.1} wireframe />
+            </mesh>
+            <mesh position={[0, -2, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+                <planeGeometry args={[10, 10, 20, 20]} />
+                <meshBasicMaterial color="#0f172a" wireframe transparent opacity={0.05} />
+            </mesh>
         </group>
     );
 };

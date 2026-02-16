@@ -13,15 +13,15 @@ export const AssessmentProvider = ({ children }) => {
     const location = useLocation();
     const { showToast } = useToast();
 
-    // Steps definition
-    // Steps definition
-    const steps = [
+    // Available Rounds Definition
+    const AVAILABLE_ROUNDS = [
         { id: 'aptitude', path: '/aptitude', label: 'Aptitude Test' },
         { id: 'technical', path: '/technical', label: 'Technical Assessment' },
         { id: 'gd', path: '/gd-arena', label: 'Group Discussion' },
         { id: 'hr', path: '/hr-module', label: 'Face to Face (HR)' }
     ];
 
+    const [activeSteps, setActiveSteps] = useState([]);
     const [currentStepIndex, setCurrentStepIndex] = useState(0);
     const [completedSteps, setCompletedSteps] = useState([]);
 
@@ -29,7 +29,7 @@ export const AssessmentProvider = ({ children }) => {
     const [resumeSuggestions, setResumeSuggestions] = useState([]);
 
     const [jobRole, setJobRoleState] = useState(localStorage.getItem('nexus_job_role') || '');
-    const [assessmentMode, setAssessmentMode] = useState(localStorage.getItem('nexus_assessment_mode') || 'sequence');
+    const [examName, setExamNameState] = useState(localStorage.getItem('nexus_exam_name') || '');
 
     const [isRoleModalOpen, setIsRoleModalOpen] = useState(false);
     const [isCongratsModalOpen, setIsCongratsModalOpen] = useState(false);
@@ -39,38 +39,62 @@ export const AssessmentProvider = ({ children }) => {
         // Recover state from local storage if needed
         const savedStep = localStorage.getItem('nexus_current_step_index');
         const savedCompleted = JSON.parse(localStorage.getItem('nexus_completed_steps') || '[]');
+        const savedActiveSteps = JSON.parse(localStorage.getItem('nexus_active_steps') || '[]');
+        const savedExamName = localStorage.getItem('nexus_exam_name');
 
         if (savedStep) setCurrentStepIndex(parseInt(savedStep));
         if (savedCompleted.length > 0) setCompletedSteps(savedCompleted);
+        if (savedActiveSteps.length > 0) setActiveSteps(savedActiveSteps);
+        if (savedExamName) setExamNameState(savedExamName);
     }, []);
 
-    const startAssessment = (role, mode = 'sequence', targetPath = '/aptitude') => {
+    const startAssessment = (role, examName, selectedRoundIds) => {
         setJobRoleState(role);
-        setAssessmentMode(mode);
+        setExamNameState(examName);
+
+        // Build the schedule based on selection order
+        // If selectedRoundIds is not provided or empty, default to all rounds? 
+        // Or assume the caller always provides valid IDs. 
+        // Let's assume the caller provides valid IDs.
+
+        let newActiveSteps = [];
+        if (selectedRoundIds && selectedRoundIds.length > 0) {
+            newActiveSteps = selectedRoundIds.map(id => AVAILABLE_ROUNDS.find(r => r.id === id)).filter(Boolean);
+        } else {
+            // Fallback to all rounds if none selected (should be handled by UI though)
+            newActiveSteps = AVAILABLE_ROUNDS;
+        }
+
+        setActiveSteps(newActiveSteps);
 
         localStorage.setItem('nexus_job_role', role);
-        localStorage.setItem('nexus_assessment_mode', mode);
+        localStorage.setItem('nexus_exam_name', examName);
+        localStorage.setItem('nexus_active_steps', JSON.stringify(newActiveSteps));
+
+        // Reset Progress
+        setCurrentStepIndex(0);
+        setCompletedSteps([]);
+        localStorage.setItem('nexus_current_step_index', 0);
+        localStorage.setItem('nexus_completed_steps', '[]');
 
         setIsRoleModalOpen(false);
-        showToast(`Role: ${role} | Mode: ${mode === 'sequence' ? 'Full Assessment' : 'Practice'}`, 'success');
+        showToast(`Session Started: ${examName}`, 'success');
 
-        if (mode === 'sequence') {
-            navigate('/aptitude');
-            setCurrentStepIndex(0);
-            localStorage.setItem('nexus_current_step_index', 0);
-        } else {
-            if (targetPath) navigate(targetPath);
+        if (newActiveSteps.length > 0) {
+            navigate(newActiveSteps[0].path);
         }
     };
 
     const cancelAssessment = () => {
         setJobRoleState('');
-        setAssessmentMode('sequence');
+        setExamNameState('');
+        setActiveSteps([]);
         setCurrentStepIndex(0);
         setCompletedSteps([]);
 
         localStorage.removeItem('nexus_job_role');
-        localStorage.removeItem('nexus_assessment_mode');
+        localStorage.removeItem('nexus_exam_name');
+        localStorage.removeItem('nexus_active_steps');
         localStorage.removeItem('nexus_current_step_index');
         localStorage.removeItem('nexus_completed_steps');
 
@@ -79,6 +103,7 @@ export const AssessmentProvider = ({ children }) => {
     };
 
     const completeStep = (stepId, suggestions = []) => {
+        // Logic: Add to completed. Check next in activeSteps.
         if (!completedSteps.includes(stepId)) {
             const newCompleted = [...completedSteps, stepId];
             setCompletedSteps(newCompleted);
@@ -90,14 +115,9 @@ export const AssessmentProvider = ({ children }) => {
             }
 
             // Check if there is a next step
-            if (assessmentMode === 'sequence' && currentStepIndex < steps.length - 1) {
-                setNextRoundPath(steps[currentStepIndex + 1].path);
+            if (currentStepIndex < activeSteps.length - 1) {
+                setNextRoundPath(activeSteps[currentStepIndex + 1].path);
                 setIsCongratsModalOpen(true);
-            } else if (assessmentMode === 'standalone') {
-                // Standalone completion logic
-                showToast('Round completed successfully!', 'success');
-                setIsCongratsModalOpen(true); // Still show congrats but simple one
-                setNextRoundPath(null);
             } else {
                 showToast('All rounds completed! Redirecting to dashboard...', 'success');
                 setTimeout(() => navigate('/reports'), 2000);
@@ -111,34 +131,35 @@ export const AssessmentProvider = ({ children }) => {
         setCurrentStepIndex(nextIndex);
         localStorage.setItem('nexus_current_step_index', nextIndex);
 
-        if (nextRoundPath) {
-            navigate(nextRoundPath);
+        if (nextIndex < activeSteps.length) {
+            navigate(activeSteps[nextIndex].path);
         }
     };
 
     const checkAssessmentAccess = (path) => {
-        // If it's a non-assessment page, allow access
-        const step = steps.find(s => s.path === path);
-        if (!step) return true;
+        // If no active assessment steps, lax check
+        if (activeSteps.length === 0) return true;
+
+        // Find if path is in active steps
+        const stepIndex = activeSteps.findIndex(s => s.path === path);
+
+        // If not in active steps, user shouldn't be here ideally during an exam
+        if (stepIndex === -1) {
+            // Optional: Redirect to current step if stricly enforcing
+            // navigate(activeSteps[currentStepIndex].path);
+            return true;
+        }
 
         const currentRole = jobRole || localStorage.getItem('nexus_job_role');
-        const currentMode = assessmentMode || localStorage.getItem('nexus_assessment_mode');
 
-        // If no assessment started, allow browsing without restrictions
         if (!currentRole) {
             return true;
         }
 
-        // If standalone, allow access to any assessment page
-        if (currentMode === 'standalone') {
-            return true;
-        }
-
         // Sequence logic enforcement
-        const stepIndex = steps.findIndex(s => s.path === path);
         if (stepIndex > currentStepIndex) {
-            showToast(`Please complete the ${steps[currentStepIndex].label} first.`, 'error');
-            navigate(steps[currentStepIndex].path);
+            showToast(`Please complete the ${activeSteps[currentStepIndex].label} first.`, 'error');
+            navigate(activeSteps[currentStepIndex].path);
             return false;
         }
 
@@ -146,10 +167,11 @@ export const AssessmentProvider = ({ children }) => {
     };
 
     const value = {
-        currentStep: steps[currentStepIndex],
+        currentStep: activeSteps[currentStepIndex] || {}, // Fallback empty object
+        activeSteps, // Expose active steps
         completedSteps,
         jobRole,
-        assessmentMode,
+        // assessmentMode removed/deprecated in favor of activeSteps
         startAssessment,
         cancelAssessment,
         isRoleModalOpen,
