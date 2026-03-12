@@ -280,6 +280,11 @@ VITE_API_URL=<your-api-url>
 VITE_ENABLE_ANALYTICS=true
 ```
 
+> **⚠️ Security Warning for Contributors**
+> NEVER commit your `.env` file or any file containing API keys, passwords, or secrets to the Git repository. 
+> The project's `.gitignore` has been updated to exclude `.env` files automatically. 
+> If you create new files containing sensitive info (like `.pem`, `.key`, or `secrets.json`), ensure they remain untracked.
+
 ---
 
 ## 📊 Features Overview
