@@ -1,0 +1,55 @@
+﻿cmd : warning: in the working 
+copy of 
+'project/src/index.css', LF 
+will be replaced by CRLF the 
+next time Git touches it
+At line:1 char:1
++ cmd /c "git add . && git 
+commit -m \"feat: Add ML 
+Readiness module an ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~
+    + CategoryInfo          : 
+    NotSpecified: (warning:   
+  in the... Git touches it:   
+ String) [], RemoteExcepti    
+on
+    + FullyQualifiedErrorId : 
+    NativeCommandError
+ 
+warning: in the working copy 
+of 'project/src/pages/Dashboar
+d.jsx', LF will be replaced 
+by CRLF the next time Git 
+touches it
+warning: in the working copy 
+of 'project/src/context/ThemeC
+ontext.jsx', LF will be 
+replaced by CRLF the next 
+time Git touches it
+warning: in the working copy 
+of 'project/src/pages/MLReadin
+ess.jsx', LF will be replaced 
+by CRLF the next time Git 
+touches it
+error: pathspec 'feat:' did 
+not match any file(s) known 
+to git
+error: pathspec 'Add' did not 
+match any file(s) known to git
+error: pathspec 'ML' did not 
+match any file(s) known to git
+error: pathspec 'Readiness' 
+did not match any file(s) 
+known to git
+error: pathspec 'module' did 
+not match any file(s) known 
+to git
+error: pathspec 'and' did not 
+match any file(s) known to git
+error: pathspec 'UI' did not 
+match any file(s) known to git
+error: pathspec 'updates\ ' 
+did not match any file(s) 
+known to git
